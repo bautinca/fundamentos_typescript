@@ -1,0 +1,14 @@
+# Motivacion
+JavaScript es un lenguaje de programación que se utiliza principalmente para el desarrollo web. Su popularidad ha crecido enormemente debido a su capacidad para crear aplicaciones interactivas y dinámicas en el navegador. Sin embargo, a medida que las aplicaciones web se vuelven más complejas, surge la necesidad de manejar el estado de manera eficiente y predecible. Y es aqui cuando TypeScript entra en juego. TypeScript es un superconjunto de JavaScript que añade tipado estático y otras características avanzadas al lenguaje, lo que permite a los desarrolladores escribir código más robusto y mantenible.
+
+JavaScript es un lenguaje de **tipado debil**, es decir, no requiere que se especifiquen los tipos de datos de las variables. Esto puede llevar a errores difíciles de detectar en tiempo de ejecución, especialmente en aplicaciones grandes y complejas. TypeScript, por otro lado, permite a los desarrolladores definir tipos explícitos para variables, funciones y objetos, lo que ayuda a prevenir errores y facilita la comprensión del código.
+
+Por otro lado JavaScript **no es un lenguaje muy orientado a objetos**, aunque permite la programación orientada a objetos mediante prototipos, no ofrece una sintaxis clara y estructurada para definir clases y herencia. TypeScript introduce una sintaxis más familiar y robusta para la programación orientada a objetos, lo que facilita la creación de aplicaciones más organizadas y escalables.
+
+Entonces TypeScript es un lenguaje **fuertemente tipado** y ademas es ideal para **la programacion orientada a objetos**, lo que lo convierte en una excelente opcion para el desarrollo de aplicaciones web modernas y complejas.
+
+Por otro lado una gran diferencia es que JavaScript es un lenguaje **interpetado** (es decir, el codigo se ejecuta directamente en el navegador) mientras que TypeScript es un lenguaje **compilado** (es decir, el codigo se transpila a JavaScript antes de ser ejecutado). Esto significa que TypeScript permite a los desarrolladores detectar errores en tiempo de compilación, lo que puede mejorar la calidad del código y reducir los errores en tiempo de ejecución.
+
+Entonces como TypeScript es **COMPILADO** eso quiere decir que el codigo escrito en TypeScript no puede ser ejecutado en el navegador directamente, sino que debe ser compilado a JavaScript primero, en cambio en JavaScript directamente se puede ejecutar en el navegador sin necesidad de compilacion y la desventaja de esto es que los errores de sintaxis y de tipo no se detectan hasta que el código se ejecuta, lo que puede llevar a errores difíciles de depurar y a un mayor tiempo de desarrollo.
+
+> **NOTA**: Se estudio en base a la documentacion oficial de TypeScript
