@@ -302,3 +302,113 @@ type Id4 = ConvertirId<"Hola">; // Esto nos devuelve "Hola"
 // Y si recibe cualquier otro tipo conserva el tipo original.
 
 // Ahora veamos el sig. caso curioso:
+type EsTexto2<T> = T extends string ? "Si" : "No";
+
+type Resultado5 = EsTexto2<string | number>; // Esto nos devuelve "Si" | "No"
+
+// Esto es porque TS evalua cada tipo de la union por separado, osea es como
+// si hiciera EsTexto2<string> | EsTexto2<number> y luego une los resultados, osea "Si" | "No"
+
+// -------------------------------------------------------
+// -------------------------------------------------------
+// -------------------------------------------------------
+
+// MAPPED TYPES - TIPOS MAPEADOS
+
+// La idea consiste en ir recorriendo las propiedades de un tipo e ir transformandolas
+// Imaginemos que tneemos el siguiente tipo:
+
+type UsuarioI = {
+  nombre: string;
+  edad: number;
+  email: string;
+};
+
+// Y supongamos que queremos tener otro tipo que tenga exactamente
+// las mismas propiedades pero sean todas opcionales, ebtonces podriamos hacerlo manualmente:
+
+type UsuarioIOpcional = {
+  nombre?: string;
+  edad?: number;
+  email?: string;
+};
+
+// Pero imaginate que el tipo UsuarioI tiene 100 propiedades,
+// esto seria muy tedioso, por lo tanto lo podemos hacer automaticamente:
+type UsuarioIOpcional2 = {
+  [Propiedad in keyof UsuarioI]?: UsuarioI[Propiedad];
+};
+
+// Y listo! ¿Que hicimos?
+// Bueno lo estudiaremos parte por parte
+// Primero el keyof UsuarioI sabemos que nos devuelve "nombre" | "edad" | "email"
+// Luego el [Propiedad in keyof UsuarioI] nos permite recorrer cada una de esas propiedades
+// y finalmente el UsuarioI[Propiedad] como bien sabemos nos permite obtener el tipo de cada propiedada
+// osea UsuarioI["nombre"] nos devuelve string, y asi con cada propiedad
+// Y finalmente el ? al final de la propiedad nos permite hacerla opcional
+
+// Por tanto el tipo UsuarioIOpcional2 es exactamente lo mismo que UsuarioIOpcional
+
+// Lo mismo si por ejemplo queremos crear otro tipo con las mismas propiedades
+// pero que ninguna de las propiedades se pueda modificar, entonces:
+type UsuarioIReadonly = {
+  readonly [Propiedad in keyof UsuarioI]: UsuarioI[Propiedad];
+};
+
+// Esto es lo mismo que hacer manualmente:
+type UsuarioIReadonly2 = {
+  readonly nombre: string;
+  readonly edad: number;
+  readonly email: string;
+};
+
+// Ahora todas las propiedades son de solo lectura.
+
+// Tambien si por ejemplo queremos crear un nuevo tipo que tenga las mismas propiedades
+// pero que todas las propiedades tambien puedan contener null entonces:
+type UsuarioINullable = {
+  [Propiedad in keyof UsuarioI]: UsuarioI[Propiedad] | null;
+};
+
+// Seria lo mismo que hacer:
+type UsuarioINullable2 = {
+  nombre: string | null;
+  edad: number | null;
+  email: string | null;
+};
+
+// --------------------------------------------------------
+// --------------------------------------------------------
+// --------------------------------------------------------
+
+// Si recordamos podemos construir strings asi:
+const nombre = "Juan";
+const saludo = `Hola ${nombre}`; // Esto nos devuelve "Hola Juan"
+
+// Pero tambien TS nos permite construir tipos de strings, por ejemplo:
+type Nombre = "Juan" | "Pedro" | "Maria";
+type Saludo = `Hola ${Nombre}`; // Esto nos devuelve "Hola Juan" | "Hola Pedro" | "Hola Maria"
+
+// Supongamos que tenemos un sistema que registra eventos de usuarios, los eventos pueden ser:
+type Evento = "login" | "logout" | "registro";
+
+// Y supongamos que queremos crear un tipo que represente los mensajes de esos eventos, entonces:
+type MensajeEvento = `El usuario ha realizado un ${Evento}`; // Esto nos devuelve "El usuario ha realizado un login" | "El usuario ha realizado un logout" | "El usuario ha realizado un registro"
+
+// Y ahora este utlimo tipo lo podemos usar para crear variables de ese tipo, pro ejemplo:
+const mensaje1: MensajeEvento = "El usuario ha realizado un login"; // Esto es valido
+const mensaje2: MensajeEvento = "El usuario ha realizado un logout";
+
+// O una funcion que reciba un mensaje de ese tipo:
+function mostrarMensaje(mensaje: MensajeEvento) {
+  console.log(mensaje);
+}
+
+mostrarMensaje("El usuario ha realizado un registro"); // Esto es valido
+// mostrarMensaje("El usuario ha realizado un error"); // Esto no es valido ya que "El usuario ha realizado un error" no es un mensaje permitido por el tipo MensajeEvento
+
+// Tambien podemos combinar tipos de strings con tipos genericos, por ejemplo:
+type Accion2 = "crear" | "eliminar";
+type Elemento2 = "usuario" | "producto";
+
+type Permiso = `${Accion2} ${Elemento2}`; // Esto nos devuelve "crear usuario" | "crear producto" | "eliminar usuario" | "eliminar producto", osea todas las combinaciones posibles entre los tipos Accion2 y Elemento2

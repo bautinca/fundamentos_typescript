@@ -49,13 +49,12 @@ mostrarPropiedad("email");
 // Basicamente nos permite obtener el tipo de una variable, por ejemplo:
 const nombreZ = "Juan";
 console.log(typeof nombreZ); // Esto nos devuelve "string"
-// Tambien podemos usar typeof directamente en una declaracion de tipo:
+// Pero la novedad en TS es que tambien podemos usar typeof directamente en una declaracion de tipo:
 const usuario = {
     nombre: "Juan",
     edad: 30,
     activo: true,
 };
-console.log(typeof usuario); // Esto nos devuelve "object"
 // Basicamente le dijimos a TS que obtenga el tipo de la variable 'usuario' y es como si hubieramos escrito lo mismo que:
 // typeof usuario = {
 //   nombre: string;
@@ -88,3 +87,25 @@ const nuevaConfiguracion = {
     tema: "claro",
     notificaciones: false,
 };
+// El resultado seria:
+// type Elemento = number;
+// Otro ejemplo mas interesante:
+const usuariosX = [
+    { noombre: "Juan", edad: 30 },
+    { noombre: "Pedro", edad: 25 },
+    { noombre: "Maria", edad: 28 },
+];
+// --------------------------------------------------------
+// --------------------------------------------------------
+// --------------------------------------------------------
+// Si recordamos podemos construir strings asi:
+const nombre = "Juan";
+const saludo = `Hola ${nombre}`; // Esto nos devuelve "Hola Juan"
+// Y ahora este utlimo tipo lo podemos usar para crear variables de ese tipo, pro ejemplo:
+const mensaje1 = "El usuario ha realizado un login"; // Esto es valido
+const mensaje2 = "El usuario ha realizado un logout";
+// O una funcion que reciba un mensaje de ese tipo:
+function mostrarMensaje(mensaje) {
+    console.log(mensaje);
+}
+mostrarMensaje("El usuario ha realizado un registro"); // Esto es valido
