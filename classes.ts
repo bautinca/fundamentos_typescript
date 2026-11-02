@@ -468,3 +468,300 @@ perro3.mostrarNombre(); // El nombre del perro es Animal
 
 // MIEMBROS ESTATICOS
 
+// Hasta ahora todas las propiedades y metodos que vimos pertenecian
+// a una instancia particular de una clase. Pero
+// y si queremos que una propiedad o metodo
+// pertenezca a la clase en si misma y no a una instancia particular?
+// Para eso tenemos los miembros estaticos. Por ejemplo:
+
+class Usuario3 {
+  static cantidad: number = 0; // cantidad es un miembro estatico, pertenece a la clase Usuario3 y no a una instancia particular
+
+  constructor() {
+    Usuario3.cantidad++; // Cada vez que se crea un nuevo usuario, incrementamos la cantidad de usuarios
+  }
+}
+
+const usuario3_1 = new Usuario3();
+const usuario3_2 = new Usuario3();
+const usuario3_3 = new Usuario3();
+
+console.log(Usuario3.cantidad); // 3, accedemos a la propiedad estatica cantidad desde la clase Usuario3
+
+// Un detalle importante es que accedemos a la propiedad usando el nombre DE LA CLASE que es Usuario3.
+// y no mediante una instancia como haciamos antes.
+
+// Tambien podemos definir metodos estaticos:
+
+class Calculadora {
+  static sumar(a: number, b: number): number {
+    return a + b;
+  }
+}
+
+console.log(Calculadora.sumar(5, 10)); // 15, accedemos al metodo estatico sumar desde la clase Calculadora
+
+// Si nos fijamos no necesitamos crear una instancia de Calculadora para utilizar sumar().
+// Esto es util para funcionalidades que no dependen del estado de un objeto particular.
+
+// ---------------------------------
+// ---------------------------------
+// ---------------------------------
+
+// STATIC BLOCKS
+
+// Son bloques de codigo que se ejecutan una sola vez cuando se inicializa la clase
+// y permiten realizar inicializaciones complejas de miembros estaticos.
+
+class Configuracion2 {
+  static modo: string;
+
+  // Bloque estatico
+  static {
+    const entorno = "desarrollo";
+
+    if (entorno === "desarrollo") {
+      Configuracion2.modo = "debug";
+    } else {
+      Configuracion2.modo = "produccion";
+    }
+  }
+}
+
+// Cuando se inicializa la clase se ejecutara ese bloque estatico y se asigna el valor de la
+// propiedad estatica modo.
+
+// ---------------------------------
+// ---------------------------------
+// ---------------------------------
+
+// CLASES GENERICAS
+
+// Ya vimos tipos de datos genericos en funciones
+// Tambien el mismo concepto se puede aplicar a clases.
+// Supongamos que queremos crear una clase Caja que pueda almacenar cualquier tipo de dato
+// entonces:
+
+class Caja<T> { // T es un tipo generico
+  contenido: T;
+
+  constructor(contenido: T) {
+    this.contenido = contenido;
+  }
+}
+
+// La <T> significa que la clase recibe un parametro generico. Ese parametro
+// representa el tipo de dato que almacenara la caja, entonces podemos crear una caja
+// con un tipo de dato especifico, por ejemplo:
+
+const cajaDeNumeros = new Caja<number>(123); // Caja que almacena un numero
+const cajaDeCadenas = new Caja<string>("Hola"); // Caja que almacena una cadena
+
+console.log(cajaDeNumeros.contenido); // 123
+console.log(cajaDeCadenas.contenido); // Hola
+
+// La ventaja es que podemos reutiizar la misma clase para diferentes tipos de datos sin perder
+// el control de tipos
+
+// Una limitante importante es que no podemos
+// usar los tipos genericos para definir propiedades estaticas:
+class Caja2<T> {
+  // static contenido: T; // Esto nos daria error porque no podemos usar un tipo generico en un miembro estatico
+}
+
+// ---------------------------------
+// ---------------------------------
+// ---------------------------------
+
+// EXPRESIONES DE CLASE
+
+// Hasta ahora declaramos clases de esta manera:
+class Usuario4 {
+  nombre = "Pedro";
+}
+
+// Sin embargo tambien podemos crear clases asignandolas a una variable:
+
+const Usuario5 = class {
+  nombre = "Juan";
+}
+
+const usuario5 = new Usuario5();
+console.log(usuario5.nombre); // Juan
+
+// Es tal cual lo mismo, la diferencia es que en la primera forma
+// le damos un nombre a la clase y en la segunda forma no.
+// En la segunda forma la clase es anonima y se asigna a la variable Usuario5.
+
+// Tambien podemos usar genericos en las expresiones de clase:
+
+const Caja3 = class<T> {
+  contenido: T;
+
+  constructor(contenido: T) {
+    this.contenido = contenido;
+  }
+}
+
+const cajaDeBooleanos = new Caja3<boolean>(true);
+console.log(cajaDeBooleanos.contenido); // true
+
+// ---------------------------------
+// ---------------------------------
+// ---------------------------------
+
+// FIRMAS DE CONSTRUCTORES
+
+// Veamos el siguiente caso:
+
+class Auto3 {
+  constructor(public marca: string) {}
+}
+
+// Tenemos la clase Auto3 con un constructor que podemos invocar con new.
+// Las instancias de la clase Auto3 son objetos creados mediante ese constructor
+
+// Por ejemplo la sig. instancia:
+const miAuto = new Auto3("Toyota");
+
+// Si queremos obtener e2l tipo de instancia a partir de la clase podemos usar:
+type TipoAuto = InstanceType<typeof Auto3>;
+
+// Ahora TipoAuto es un tipo que representa la instancia de Auto3, por tanto
+// podemos crear una funcion que reciba un parametro de tipo TipoAuto:
+function mostrarMarca(auto: TipoAuto) {
+  console.log(`La marca del auto es ${auto.marca}`);
+}
+
+mostrarMarca(miAuto); // La marca del auto es Toyota
+
+// Entonces typeof Auto3 obtiene el tipo de la propia clase, pero luego cuando
+// de eso hacemos InstanceType obtiene el TIPO DE INSTANCIA que produce ese constructor
+
+// Para no confundir, no es que obtenemos el tipo de la clase, sino el TIPO
+// DE INSTANCIA que produce el constructor de la clase.
+
+// ---------------------------------
+// ---------------------------------
+// ---------------------------------
+
+// CLASES Y MIEMBROS ABSTRACTOS
+
+// Esto es un concepto muy imporrtante de la POO.
+// Una clase abstracta es una clase que sirve como plantilla para otras clases, pero que no puede
+// instanciarse directamente.
+// Imaginemos que estamos desarrollando un sistema de figuras geometricas
+// Sabemos que todas las figuras tienen un area pero la forma de calcularla varia
+// en c/u
+
+// ENtonces podemos en primera instancia definir una clase abstracta que engloba a todas
+// las figuras geometricas:
+
+abstract class Figura {
+  abstract calcularArea(): number; // Este metodo es abstracto, no tiene implementacion y debe ser implementado por las clases hijas
+}
+
+// Entonces Figura es una clase ABSTRACTA. Por otro lado su metodo
+// calcularArea() es un metodo ABSTRACTO donde al ser abstracto no tiene implementacion en esta clase abstracta
+// sin embargo las clases hijas que hereden de Figura deberan implementar ese metodo.
+
+class Rectangulo3 extends Figura {
+  constructor(public ancho: number, public alto: number) {
+    super();
+  }
+
+  calcularArea(): number {
+    return this.ancho * this.alto;
+  }
+}
+
+// Y otra clase:
+class Circulo3 extends Figura {
+  constructor(public radio: number) {
+    super();
+  }
+
+  calcularArea(): number {
+    return Math.PI * this.radio * this.radio;
+  }
+}
+
+// Y creamos instancias de ambos:
+const rectangulo = new Rectangulo3(5, 10);
+const circulo = new Circulo3(3);
+
+console.log(`Area del rectangulo: ${rectangulo.calcularArea()}`);
+console.log(`Area del circulo: ${circulo.calcularArea()}`);
+
+// Entonces la clase Figura es abstracta y no puede instanciarse directamente, pero sirve como plantilla para las clases Rectangulo3 y Circulo3 que implementan el metodo calcularArea() de manera especifica para cada figura.
+
+// Esto no esta permitido
+// const figura = new Figura(); // Esto nos daria error porque Figura es abstracta y no puede instanciarse directamente
+
+// Esto ultimo nos daria error porque es una clase ABSTRACTA, no tiene sentido crear una figura generica si no
+// sabemos como clacular su area.
+
+// Entonces las clases ABSTRACTAS sirven para definir una estructura comun que todas las clases derivadas deben respetar.
+
+// Tambien podemos definir metodos normales dentro de clases abstractas
+
+abstract class Figura2 {
+  abstract calcularArea(): number; // Metodo abstracto
+
+  mostrarArea(): void { // Metodo normal: La logica de este metodo lo van a compartir todas las clases hijas, por eso lo definimos en la clase abstracta.
+    console.log(`El area es: ${this.calcularArea()}`);
+  }
+}
+
+// Esto ultimo define 2 cosas:
+// 1. Comportamiento compartido definido en la clase abstracta mostrarArea()
+// 2. Comportamiento especifico definido por cada clase concreta calcularArea()
+
+// ---------------------------------
+// ---------------------------------
+// ---------------------------------
+
+// RELACIONES ENTRE CLASES
+
+// Recordemos que TS generalmente no se fija en el nombre de un tipo, sino en la estructura que tiene
+// Por ejemplo supongamos estas 2 clases con nombres distintos pero que sin embargo
+// tienen la misma estructura:
+
+class Persona6 {
+  nombre = "Pedro";
+  edad = 25;
+}
+
+class Usuario6 {
+  nombre = "Juan";
+  edad = 30;
+}
+
+// Aunque son 2 clases distintas, ambas tienen exactamente las mismas propiedades y tipos
+// Por lo tanto TS toma como valido hacer lo siguiente:
+
+const persona: Persona6 = new Usuario6(); // Esto es valido porque ambas clases tienen la misma estructura
+
+// TS lo acepta porque considera que tiene todo lo necesario para hacerlo compatible con
+// la clase Persona6 que seria una propiedad nombre de tipo string y una propiedad edad de tipo number.
+// NO IMPORTA QUE LAS CLASES TENGAN NOMBRES DISTINTOS.
+
+// Veamos este otro caso:
+
+class Persona7 {
+  nombre = "Pedro";
+  edad = 25;
+}
+
+class Empleado7 {
+  nombre = "Juan";
+  edad = 30;
+  sueldo = 1000000;
+}
+
+// Esto ultimo tambien lo acepta:
+const persona7: Persona7 = new Empleado7(); // Esto es valido porque Empleado7 tiene todas las propiedades de Persona7 y ademas tiene una propiedad extra sueldo
+
+// En cambio esto ultimo no funcionaria:
+// const empleado7: Empleado7 = new Persona7(); // Esto nos daria error porque Persona7 no tiene la propiedad sueldo que si tiene Empleado7
+
