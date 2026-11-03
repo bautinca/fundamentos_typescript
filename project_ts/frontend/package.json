@@ -1,0 +1,14 @@
+{
+  "name": "version-frontend",
+  "version": "1.10.1",
+  "description": "Frontend simple en TypeScript puro (sin React): muestra la version",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}
